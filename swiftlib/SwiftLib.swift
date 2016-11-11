@@ -42,10 +42,15 @@ extension UIViewController{
         notif.notificationLabelBackgroundColor = backColor
         notif.notificationLabelTextColor = UIColor.whiteColor()
         notif.notificationAnimationOutStyle = CWNotificationAnimationStyle.Top
-        notif.displayNotificationWithMessage(txt, forDuration: 2.5)
+        notif.displayNotificationWithMessage(txt, forDuration: 5.0)
         notif.notificationTappedBlock = {
             notif.dismissNotification()
         }
+    }
+    func navigationBarBackImage(image:UIImage){
+        self.navigationController!.navigationBar.setBackgroundImage(image,
+                                                                    forBarMetrics: .Default)
+
     }
 }
 
@@ -209,6 +214,53 @@ func getRandomColor() -> UIColor{
     return UIColor(red: randomRed, green: randomGreen, blue: randomBlue, alpha: 1.0)
     
 }
+func popTransation(sender:UIViewController,target:UIViewController){
+
+    
+    let navController = UINavigationController(rootViewController: target)
+    navController.modalPresentationStyle = UIModalPresentationStyle.Popover
+    sender.presentViewController(navController, animated: true, completion: nil)
+
+}
 
 
+func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+
+    let scale = newWidth / image.size.width
+    let newHeight = image.size.height * scale
+    UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight))
+    image.drawInRect(CGRectMake(0, 0, newWidth, newHeight))
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+
+
+
+
+    return newImage
+}
+
+func sizeImageKB(image:UIImage,size:Int,complate:(number:CGFloat) -> ()){
+
+    var x :Int = 0
+    var y:CGFloat = 1.0
+    repeat {
+        let imgData: NSData = NSData(data: UIImageJPEGRepresentation(image, y)!)
+        let imageSize: Int = imgData.length
+        let nowSize = imageSize/1024
+        if(nowSize>size){
+
+            print("resim büyük ",nowSize)
+            y = y - 0.01
+
+
+        }else{
+            x = 11
+            print(y," resim küçük tamam ",nowSize)
+            complate(number: y)
+        }
+
+
+    } while x <= 10
+
+}
 
